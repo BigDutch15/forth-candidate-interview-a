@@ -1,0 +1,82 @@
+[
+  {
+    "transaction_id": "TXN-00001",
+    "account_id": "100234",
+    "amount": 250.00,
+    "currency": "USD",
+    "type": "CREDIT",
+    "timestamp": "2026-01-03T14:22:00Z"
+  },
+  {
+    "transaction_id": "TXN-00002",
+    "account_id": "100235",
+    "amount": 75.50,
+    "currency": "USD",
+    "type": "DEBIT",
+    "timestamp": "2026-01-04T09:15:00Z"
+  },
+  {
+    "transaction_id": "TXN-00003",
+    "account_id": "100241",
+    "amount": 1200.00,
+    "currency": "USD",
+    "type": "CREDIT",
+    "timestamp": "2026-01-05T11:00:00Z"
+  },
+  {
+    "transaction_id": "TXN-00004",
+    "account_id": "999999",
+    "amount": 60.00,
+    "currency": "USD",
+    "type": "DEBIT",
+    "timestamp": "2026-01-06T08:30:00Z"
+  },
+  {
+    "transaction_id": "TXN-00005",
+    "account_id": "300501",
+    "amount": "150.00",
+    "currency": "USD",
+    "type": "DEBIT",
+    "timestamp": "2026-01-07T16:45:00Z"
+  },
+  {
+    "transaction_id": "TXN-00006",
+    "account_id": "100238",
+    "amount": 500.00,
+    "currency": "usd",
+    "type": "CREDIT",
+    "timestamp": "2026-01-08T10:10:00Z"
+  },
+  {
+    "transaction_id": "TXN-00007",
+    "account_id": "300506",
+    "amount": 0,
+    "currency": "USD",
+    "type": "DEBIT",
+    "timestamp": "2026-01-09T12:00:00Z"
+  },
+  {
+    "transaction_id": "TXN-00008",
+    "account_id": "abc123",
+    "amount": 45.25,
+    "currency": "USD",
+    "type": "CREDIT",
+    "timestamp": "2026-01-10T13:20:00Z"
+  },
+  {
+    "transaction_id": "TXN-00009",
+    "account_id": "100242",
+    "amount": 320.10,
+    "currency": "USD",
+    "type": "CREDIT",
+    "timestamp": "01/11/2026"
+  },
+  {
+    "transaction_id": "TXN-00010",
+    "account_id": "100236",
+    "amount": 89.99,
+    "currency": "USD",
+    "type": "credit",
+    "timestamp": "2026-01-12T09:00:00Z"
+  }
+]

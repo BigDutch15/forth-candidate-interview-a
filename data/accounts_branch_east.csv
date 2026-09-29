@@ -1,0 +1,13 @@
+account_id,first_name,last_name,date_of_birth,email,account_type,status,opened_date
+100234,Maria,Alvarez,1985-03-12,maria.alvarez@example.com,CHECKING,Active,2011-06-01
+100235,,Chen,1990-07-22,l.chen@example.com,SAVINGS,ACTIVE,2015-01-15
+100236,David,,,d.park@example.com,CHECKING,active,2019-11-30
+100237,Sarah,Johnson,02/29/1991,sjohnson@example.com,savings,Active,03/14/2016
+100238,Ahmed,Hassan,1978-13-05,ahmed.h@example.com,CHECKING,CLOSED,2009-08-19
+100239,Emily,Davis,1995-05-05,emily.davis@example,CREDIT,"Active ",2020-02-10
+ 100240 ,Michael,Brown,1982-09-09,michael.brown@example.com,checking,Suspended,2013-07-07
+100241,Linda,Nguyen,1988-12-01,linda.nguyen@example.com,SAVINGS,Active,2017-04-23
+100241,Linda,Nguyen-Smith,1988-12-01,linda.n@example.com,SAVINGS,Closed,2017-04-23
+100242,Robert,Kim,1975-01-01,robert.kim@example.com,CHECKING,ACTIVE
+100243,Jennifer,Lopez,N/A,jennifer.lopez@example.com,SAVINGS,active,2021-09-09
+100244,,,,,CHECKING,Closed,2010-01-01

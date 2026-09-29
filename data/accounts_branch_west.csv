@@ -1,0 +1,12 @@
+account_id,first_name,last_name,date_of_birth,email,account_type,status,opened_date
+300501,James,Wilson,1980-04-04,james.wilson@example.com,CHECKING,Active,2012-03-03
+300502,Patricia,Moore,1993-10-10,patricia.moore@example.com,SAVINGS,active,2018-08-08
+300503,,Taylor,1987-06-06,taylor@example.com,CREDIT,ACTIVE,2014-05-05
+100235,Lisa,Chen,1990-07-22,l.chen@westbank.com,SAVINGS,SUSPENDED,2015-01-15
+100238,Ahmed,Hassan,1978-03-05,ahmed.h@westbank.com,SAVINGS,CLOSED,2009-08-19
+300504,Kevin,Zhang,1999-02-14,kevin.zhang@example.com,checking,Active,2022-01-01
+300505,Nancy,White,,nancy.white@example.com,SAVINGS,Active,2016-12-12
+300506,Christopher,Harris,1991-11-11,chris.harris@example.com,CREDIT,active,2019-10-10
+300506,Christopher,Harris,1991-11-11,chris.harris@example.com,CREDIT,active,2019-10-10
+300507,Barbara,,1984-08-08,barbara@example.com,CHECKING,Closed,2011-11-11
+abc123,Steven,Clark,1996-01-01,steven.clark@example.com,SAVINGS,Active,2020-06-06
