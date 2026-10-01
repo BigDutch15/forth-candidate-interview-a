@@ -1,0 +1,239 @@
+openapi: 3.0.3
+info:
+  title: Reconciliation Ingest API
+  version: 1.0.0
+  description: |
+    Downstream ingest API for reconciled Account and Transaction records.
+
+    This spec **is the output contract** for the exercise. Every record you POST must satisfy
+    the schema for its endpoint. Records that cannot be made to satisfy it must not be POSTed;
+    route them to your rejected/dead-letter sink instead.
+
+    Notes on behavior:
+    - Both endpoints accept **one record per request**.
+    - Both endpoints are **idempotent on the record's ID**. Re-posting an identical record
+      returns `200`; posting a different payload under an existing ID returns `409`.
+    - `POST /v1/transactions` returns `422` if `account_id` does not reference an account
+      previously accepted by `POST /v1/accounts`, so post accounts first.
+    - All dates are ISO-8601 `YYYY-MM-DD`; all timestamps are ISO-8601 UTC with a `Z` suffix.
+servers:
+  - url: http://localhost:8080
+    description: Local stand-in (see starter/ mock clients; no real server is required)
+security:
+  - bearerAuth: []
+paths:
+  /v1/accounts:
+    post:
+      operationId: createAccount
+      summary: Create (or idempotently replay) a reconciled account
+      tags: [accounts]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Account'
+            example:
+              account_id: "100001"
+              first_name: TestFNameJames
+              last_name: TestLNameSmith
+              date_of_birth: "1980-01-01"
+              email: testuname1@null.null
+              account_type: CHECKING
+              status: ACTIVE
+              opened_date: "2015-06-01"
+              source_systems: [EAST, WEST]
+      responses:
+        '201':
+          description: Account created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+        '200':
+          description: Identical account already exists (idempotent replay)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/Unprocessable'
+  /v1/transactions:
+    post:
+      operationId: createTransaction
+      summary: Create (or idempotently replay) a transaction
+      tags: [transactions]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Transaction'
+            example:
+              transaction_id: TXN-00001
+              account_id: "100001"
+              amount: 250.00
+              currency: USD
+              type: CREDIT
+              timestamp: "2026-01-03T14:22:00Z"
+      responses:
+        '201':
+          description: Transaction created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+        '200':
+          description: Identical transaction already exists (idempotent replay)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/Unprocessable'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Read the token from the `RECON_API_TOKEN` environment variable. Never hardcode it.
+  schemas:
+    Account:
+      type: object
+      additionalProperties: false
+      required: [account_id, last_name, email, account_type, status, opened_date, source_systems]
+      properties:
+        account_id:
+          type: string
+          pattern: '^[0-9]+$'
+          description: Numeric account identifier, always serialized as a string.
+        first_name:
+          type: string
+          nullable: true
+          minLength: 1
+        last_name:
+          type: string
+          minLength: 1
+        date_of_birth:
+          type: string
+          format: date
+          nullable: true
+        email:
+          type: string
+          format: email
+        account_type:
+          type: string
+          enum: [CHECKING, SAVINGS, CREDIT]
+        status:
+          type: string
+          enum: [ACTIVE, SUSPENDED, CLOSED]
+        opened_date:
+          type: string
+          format: date
+        source_systems:
+          type: array
+          minItems: 1
+          uniqueItems: true
+          description: Which legacy branch export(s) contributed to this reconciled record.
+          items:
+            type: string
+            enum: [EAST, WEST]
+    Transaction:
+      type: object
+      additionalProperties: false
+      required: [transaction_id, account_id, amount, currency, type, timestamp]
+      properties:
+        transaction_id:
+          type: string
+          pattern: '^TXN-[0-9]{5}$'
+        account_id:
+          type: string
+          pattern: '^[0-9]+$'
+          description: Must reference an account previously accepted by POST /v1/accounts.
+        amount:
+          type: number
+          exclusiveMinimum: true
+          minimum: 0
+          multipleOf: 0.01
+          description: Positive amount, sent as a JSON number (not a string). Direction is carried by `type`.
+        currency:
+          type: string
+          enum: [USD]
+          description: ISO-4217 code, upper case.
+        type:
+          type: string
+          enum: [CREDIT, DEBIT]
+        timestamp:
+          type: string
+          format: date-time
+          pattern: 'Z$'
+          description: ISO-8601 in UTC with a trailing Z.
+    AcceptedResponse:
+      type: object
+      required: [id, status]
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+          enum: [created, unchanged]
+    Error:
+      type: object
+      required: [code, message]
+      properties:
+        code:
+          type: string
+          example: VALIDATION_FAILED
+        message:
+          type: string
+        errors:
+          type: array
+          items:
+            type: object
+            required: [field, rule]
+            properties:
+              field:
+                type: string
+                example: amount
+              rule:
+                type: string
+                example: exclusiveMinimum
+              detail:
+                type: string
+  responses:
+    BadRequest:
+      description: Malformed JSON or payload fails schema validation
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid bearer token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Conflict:
+      description: A different payload already exists under this ID
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unprocessable:
+      description: Schema-valid but semantically invalid (e.g. unknown account_id)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
